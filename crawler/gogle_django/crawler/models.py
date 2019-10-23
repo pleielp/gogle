@@ -19,4 +19,3 @@ class ImageLink(TimeStampedModel):
     img_path = models.ForeignKey(
         "Image", null=True, on_delete=models.CASCADE, blank=True
     )
-

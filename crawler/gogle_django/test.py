@@ -1,18 +1,20 @@
-from crawler.models import ImageLink
-import django
+
+
+import os
 import re
 from collections import deque
+
 from bs4 import BeautifulSoup
 import requests
-import os
+
+import django
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
 django.setup()
-
-
-# imageObj = ImageLink(web_link="https://naver.com", img_link="test")
-# imageObj.save()
+try:
+    from crawler.models import ImageLink, Image
+except ImportError:
+    print("test")
 
 
 def parser(queue, result):
@@ -61,5 +63,16 @@ result = set()
 
 p = parser(queue, result)
 
-for i in p:
-    print(i)
+for website_url, img_url in p:
+    byte_img = requests.get(img_url).content
+    file_path = f"{hash(img_url)}.png"
+    print(f"img load : {file_path}")
+    with open(f"./uploads/{file_path}", mode='wb') as img:
+        img.write(byte_img)
+    imageObj = Image(file=file_path)
+    imageObj.save()
+
+    imglink_obj = ImageLink(web_link=website_url, img_link=img_url,
+                            img_path=imageObj).save()
+
+    print(website_url, img_url)
