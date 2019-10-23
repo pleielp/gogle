@@ -1,6 +1,5 @@
 from django.db import models
-
-# Create your models here.
+from core.models import TimeStampedModel
 
 
 class Image(models.Model):
@@ -8,8 +7,11 @@ class Image(models.Model):
 
     file = models.ImageField(upload_to="images/")
 
+    def __str__(self):
+        return str(self.file)
 
-class ImageLink(models.Model):
+
+class ImageLink(TimeStampedModel):
     """ ImageLinks Model Definition"""
 
     web_link = models.URLField()
