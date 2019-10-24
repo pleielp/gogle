@@ -84,6 +84,26 @@ DATABASES = {
     }
 }
 
+# - MYSQL Setting start 
+
+# DATABASE_INIT_COMMANDS = [
+#     "SET sql_mode ='STRICT_TRANS_TABLES';",
+#     "SET default_storage_engine = INNODB;"
+# ]
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': "django.db.backends.mysql",
+#         "OPTIONS": {
+#             "read_default_file": (BASE_DIR + "/config/mysql.cnf"),
+#             "init_command": "".join(DATABASE_INIT_COMMANDS)
+#         }
+#     }
+# }
+
+# - MYSQL Setting end
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

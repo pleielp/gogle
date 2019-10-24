@@ -1,0 +1,7 @@
+[client]
+
+DATABASE= testDB
+HOST= localhost
+USER= gogle
+PASSWORD= gogle
+PORT= 3306
