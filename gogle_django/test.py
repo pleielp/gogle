@@ -12,9 +12,9 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 try:
-    from crawler.models import ImageLink, Image
-except ImportError:
-    print("test")
+    from crawler.models import Node, Edge, Image
+except ImportError as e:
+    print(e)
 
 
 def parser(queue, result):
@@ -64,15 +64,11 @@ result = set()
 p = parser(queue, result)
 
 for website_url, img_url in p:
-    byte_img = requests.get(img_url).content
-    file_path = f"{hash(img_url)}.png"
-    print(f"img load : {file_path}")
-    with open(f"./uploads/{file_path}", mode='wb') as img:
-        img.write(byte_img)
-    imageObj = Image(file=file_path)
-    imageObj.save()
-
-    imglink_obj = ImageLink(web_link=website_url, img_link=img_url,
-                            img_path=imageObj).save()
-
-    print(website_url, img_url)
+    try:
+        node = Node.objects.get(url=website_url)
+    except Node.DoesNotExist:
+        node = Node.objects.create(url=website_url)
+    else:
+        img = Image(uri=img_url, node=node).save()
+        print(f'save image : {img_url}')
+    

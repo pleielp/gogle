@@ -2,20 +2,34 @@ from django.db import models
 from core.models import TimeStampedModel
 
 
-class Image(models.Model):
-    """ Image Model Definition """
+class Edge(TimeStampedModel):
+    dest = models.ForeignKey("Node", related_name="edge", on_delete=models.CASCADE)
+    weight = models.IntegerField(blank=True, default=1)
 
-    file = models.ImageField(upload_to="images/")
+class Node(TimeStampedModel):
+    """
+    Nodes(Website) Model Definition
+    """
+    url = models.URLField(primary_key=True)
+    edges = models.ManyToManyField("Edge", related_name="src", blank=True)
 
     def __str__(self):
-        return str(self.file)
+        return str(self.url)
+    
+class Keyword(models.Model):
+    """
+    Keyword Model Definition
+    """
+    keyword = models.CharField(max_length=100)
 
+    def __str__(self):
+        return str(self.keyword)
 
-class ImageLink(TimeStampedModel):
-    """ ImageLinks Model Definition"""
+class Image(models.Model):
+    """
+    Image Model Definition
+    """
+    uri = models.URLField(primary_key=True)
+    node = models.ForeignKey("Node", related_name="image", on_delete=models.CASCADE)
+    keywords = models.ManyToManyField("Keyword", related_name="image", blank=True)
 
-    web_link = models.URLField()
-    img_link = models.URLField()
-    img_path = models.ForeignKey(
-        "Image", null=True, on_delete=models.CASCADE, blank=True
-    )
